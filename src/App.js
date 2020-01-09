@@ -57,27 +57,6 @@ class App extends Component {
           Search{" "}
         </Search>
         <Table list={list} pattern={searchTerm} onDismiss={this.onDismiss} />
-
-        {/* <input type="text" value={searchTerm} onChange={this.onChangeSearch} /> */}
-
-        {/* {list.filter(this.isSearched(searchTerm)).map(item => (
-          <div key={item.objectID}>
-            <span>
-              <a href={item.url}> {item.title}</a>{" "}
-            </span>
-            <span>{item.author}</span>
-            <span>{item.num_comments}</span>
-            <span>{item.points}</span>
-            <span>
-              <button
-                onClick={() => this.onDimiss(item.objectID)}
-                type="button"
-              >
-                Dismiss
-              </button>
-            </span>
-          </div>
-        ))} */}
       </div>
     );
   }
@@ -109,12 +88,24 @@ class Table extends Component {
             <span>{item.num_comments}</span>
             <span>{item.points}</span>
             <span>
-              <button onClick={() => onDismiss(item.objectID)} type="button">
-                Dismiss
-              </button>
+              <Button onClick={() => onDismiss(item.objectID)}>Dismiss</Button>
             </span>
           </div>
         ))}
+      </div>
+    );
+  }
+}
+
+class Button extends Component {
+  render() {
+    const { onClick, children } = this.props;
+
+    return (
+      <div>
+        <button type="button" onClick={onClick}>
+          {children}
+        </button>
       </div>
     );
   }
