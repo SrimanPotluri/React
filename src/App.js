@@ -1,26 +1,123 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./App.css";
+
+//higher order function (a function that returns another function)
+const isSearched = searchTerm => item =>
+  item.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+const list = [
+  {
+    title: "React",
+    url: "https://reactjs.org/",
+    author: "Jordan Walke",
+    num_comments: 3,
+    points: 4,
+    objectID: 0
+  },
+  {
+    title: "Redux",
+    url: "https://redux.js.org/",
+    author: "Dan Abramov, Andrew Clark",
+    num_comments: 2,
+    points: 5,
+    objectID: 1
+  }
+];
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchTerm: "",
+      list
+    };
+  }
+
+  onChangeSearch = event => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
+  //higher order function
+  onDismiss = id => {
+    const { list } = this.state;
+    //function isNotid that removes the object with the id from the list
+    const isNotid = item => item.objectID !== id;
+    //filter method that takes a function as a parameter
+    const updatedlist = list.filter(isNotid);
+    this.setState({ list: updatedlist });
+  };
+
+  render() {
+    const { searchTerm, list } = this.state;
+
+    return (
+      <div>
+        <Search value={searchTerm} onChange={this.onChangeSearch}>
+          Search{" "}
+        </Search>
+        <Table list={list} pattern={searchTerm} onDismiss={this.onDismiss} />
+
+        {/* <input type="text" value={searchTerm} onChange={this.onChangeSearch} /> */}
+
+        {/* {list.filter(this.isSearched(searchTerm)).map(item => (
+          <div key={item.objectID}>
+            <span>
+              <a href={item.url}> {item.title}</a>{" "}
+            </span>
+            <span>{item.author}</span>
+            <span>{item.num_comments}</span>
+            <span>{item.points}</span>
+            <span>
+              <button
+                onClick={() => this.onDimiss(item.objectID)}
+                type="button"
+              >
+                Dismiss
+              </button>
+            </span>
+          </div>
+        ))} */}
+      </div>
+    );
+  }
+}
+
+class Search extends Component {
+  render() {
+    const { value, onChange, children } = this.props;
+    return (
+      <div>
+        {children}
+        <input type="text" value={value} onChange={onChange} />
+      </div>
+    );
+  }
+}
+
+class Table extends Component {
+  render() {
+    const { list, pattern, onDismiss } = this.props;
+    return (
+      <div>
+        {list.filter(isSearched(pattern)).map(item => (
+          <div key={item.objectID}>
+            <span>
+              <a href={item.url}> {item.title}</a>{" "}
+            </span>
+            <span>{item.author}</span>
+            <span>{item.num_comments}</span>
+            <span>{item.points}</span>
+            <span>
+              <button onClick={() => onDismiss(item.objectID)} type="button">
+                Dismiss
+              </button>
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
 }
 
 export default App;
