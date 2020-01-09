@@ -64,44 +64,39 @@ class App extends Component {
 
 //Coverting Search, Table, Button ES6 class components to functional stateless components
 //These functional stateless components have no lifecycle methods except for render method that will be applied implicitly.
+//functional stateless components to arrow functions
 
-function Search({ value, onChange, children }) {
-  return (
-    <div>
+const Search = ({ value, onChange, children }) => (
+  <div>
+    {children}
+    <input type="text" value={value} onChange={onChange} />
+  </div>
+);
+
+const Table = ({ list, pattern, onDismiss }) => (
+  <div>
+    {list.filter(isSearched(pattern)).map(item => (
+      <div key={item.objectID}>
+        <span>
+          <a href={item.url}> {item.title}</a>{" "}
+        </span>
+        <span>{item.author}</span>
+        <span>{item.num_comments}</span>
+        <span>{item.points}</span>
+        <span>
+          <Button onClick={() => onDismiss(item.objectID)}>Dismiss</Button>
+        </span>
+      </div>
+    ))}
+  </div>
+);
+
+const Button = ({ onClick, children }) => (
+  <div>
+    <button type="button" onClick={onClick}>
       {children}
-      <input type="text" value={value} onChange={onChange} />
-    </div>
-  );
-}
-
-function Table({ list, pattern, onDismiss }) {
-  return (
-    <div>
-      {list.filter(isSearched(pattern)).map(item => (
-        <div key={item.objectID}>
-          <span>
-            <a href={item.url}> {item.title}</a>{" "}
-          </span>
-          <span>{item.author}</span>
-          <span>{item.num_comments}</span>
-          <span>{item.points}</span>
-          <span>
-            <Button onClick={() => onDismiss(item.objectID)}>Dismiss</Button>
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Button({ onClick, children }) {
-  return (
-    <div>
-      <button type="button" onClick={onClick}>
-        {children}
-      </button>
-    </div>
-  );
-}
+    </button>
+  </div>
+);
 
 export default App;
