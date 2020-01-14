@@ -39,12 +39,14 @@ class App extends Component {
 
   //higher order function
   onDismiss = id => {
-    const { list } = this.state;
+    const { result } = this.state;
     //function isNotid that removes the object with the id from the list
     const isNotid = item => item.objectID !== id;
     //filter method that takes a function as a parameter
-    const updatedlist = list.filter(isNotid);
-    this.setState({ list: updatedlist });
+    const updatedHits = result.hits.filter(isNotid);
+    this.setState({
+      result: { ...this.state.result, hits: updatedHits }
+    });
   };
 
   render() {
