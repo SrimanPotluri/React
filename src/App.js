@@ -45,7 +45,7 @@ class App extends Component {
     //filter method that takes a function as a parameter
     const updatedHits = result.hits.filter(isNotid);
     this.setState({
-      result: { ...this.state.result, hits: updatedHits }
+      result: { ...result, hits: updatedHits }
     });
   };
 
