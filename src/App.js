@@ -7,10 +7,6 @@ const PATH_BASE = "https://hn.algolia.com/api/v1";
 const PATH_SEARCH = "/search";
 const PARAM_SEARCH = "query=";
 
-//higher order function (a function that returns another function)
-const isSearched = searchTerm => item =>
-  item.title.toLowerCase().includes(searchTerm.toLowerCase());
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +18,10 @@ class App extends Component {
 
   componentDidMount = () => {
     const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm);
+  };
 
+  fetchSearchTopStories = searchTerm => {
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
@@ -31,6 +30,12 @@ class App extends Component {
 
   setSearchTopStories = result => {
     this.setState({ result });
+  };
+
+  onSearchSubmit = event => {
+    const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm);
+    event.preventDefault();
   };
 
   onChangeSearch = event => {
@@ -57,17 +62,15 @@ class App extends Component {
     return (
       <div className="page">
         <div className="interactions">
-          <Search value={searchTerm} onChange={this.onChangeSearch}>
+          <Search
+            value={searchTerm}
+            onChange={this.onChangeSearch}
+            onSubmit={this.onSearchSubmit}
+          >
             Search{" "}
           </Search>
         </div>
-        {result && (
-          <Table
-            list={result.hits}
-            pattern={searchTerm}
-            onDismiss={this.onDismiss}
-          />
-        )}
+        {result && <Table list={result.hits} onDismiss={this.onDismiss} />}
       </div>
     );
   }
@@ -77,16 +80,16 @@ class App extends Component {
 //These functional stateless components have no lifecycle methods except for render method that will be applied implicitly.
 //functional stateless components to arrow functions
 
-const Search = ({ value, onChange, children }) => (
-  <div>
-    {children}
+const Search = ({ value, onChange, children, onSubmit }) => (
+  <form onSubmit={onSubmit}>
     <input type="text" value={value} onChange={onChange} />
-  </div>
+    <button type="submit">{children}</button>
+  </form>
 );
 
-const Table = ({ list, pattern, onDismiss }) => (
+const Table = ({ list, onDismiss }) => (
   <div className="table">
-    {list.filter(isSearched(pattern)).map(item => (
+    {list.map(item => (
       <div key={item.objectID} className="table-row">
         <span style={{ width: "40%" }}>
           <a href={item.url}> {item.title}</a>{" "}
