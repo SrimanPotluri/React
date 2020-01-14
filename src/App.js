@@ -53,7 +53,6 @@ class App extends Component {
     const { searchTerm, result } = this.state;
 
     //render null if the list is empty
-    if (!result) return null;
 
     return (
       <div className="page">
@@ -62,11 +61,13 @@ class App extends Component {
             Search{" "}
           </Search>
         </div>
-        <Table
-          list={result.hits}
-          pattern={searchTerm}
-          onDismiss={this.onDismiss}
-        />
+        {result && (
+          <Table
+            list={result.hits}
+            pattern={searchTerm}
+            onDismiss={this.onDismiss}
+          />
+        )}
       </div>
     );
   }
