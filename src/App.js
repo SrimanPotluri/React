@@ -4,6 +4,7 @@ import "./App.css";
 
 const DEFAULT_QUERY = "redux";
 const PATH_BASE = "https://hn.algolia.com/api/v1";
+
 const PATH_SEARCH = "/search";
 const PARAM_SEARCH = "query=";
 const PARAM_PAGE = "page=";
@@ -16,7 +17,8 @@ class App extends Component {
     this.state = {
       searchTerm: DEFAULT_QUERY,
       searchKey: "",
-      results: null
+      results: null,
+      error: null
     };
   }
 
@@ -32,7 +34,7 @@ class App extends Component {
     )
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
-      .catch(error => error);
+      .catch(error => this.setState({ error }));
   };
 
   needsToSearchTopStories = searchTerm => {
@@ -78,7 +80,7 @@ class App extends Component {
   };
 
   render() {
-    const { searchTerm, results, searchKey } = this.state;
+    const { searchTerm, results, searchKey, error } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
     const list =
@@ -97,7 +99,13 @@ class App extends Component {
             Search{" "}
           </Search>
         </div>
-        <Table list={list} onDismiss={this.onDismiss} />
+        {error ? (
+          <div className="interactions">
+            <p>Something went wrong.</p>
+          </div>
+        ) : (
+          <Table list={list} onDismiss={this.onDismiss} />
+        )}
         <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
           More
         </Button>
