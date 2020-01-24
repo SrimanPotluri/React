@@ -18,6 +18,12 @@ import {
 
 const Loading = () => <div>Loading...</div>;
 
+//higher order component, takes in a component and returns an enhanced version of that component
+const withLoading = Component => ({ isLoading, ...rest }) =>
+  isLoading ? <Loading /> : <Component {...rest} />;
+
+const ButtonWithLoading = withLoading(Button);
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -120,11 +126,12 @@ class App extends Component {
         {isLoading ? (
           <Loading />
         ) : (
-          <Button
+          <ButtonWithLoading
+            isLoading={isLoading}
             onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
           >
             More
-          </Button>
+          </ButtonWithLoading>
         )}
       </div>
     );
