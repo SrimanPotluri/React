@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../../components/Button";
 import PropTypes from "prop-types";
 import "./index.css";
-import { SORTS } from "../../components/App";
+import { SORTS } from "../../constants";
 import { Sort } from "../../components/Sort";
 
 const Table = ({ list, sortKey, onSort, onDismiss, isSortReverse }) => {

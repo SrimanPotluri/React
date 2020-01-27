@@ -13,8 +13,7 @@ import {
   PATH_SEARCH,
   PARAM_SEARCH,
   PARAM_PAGE,
-  PARAM_HPP,
-  SORTS
+  PARAM_HPP
 } from "../../constants";
 
 const Loading = () => <div>Loading...</div>;
@@ -158,4 +157,3 @@ class App extends Component {
 }
 
 export default App;
-export { SORTS };
