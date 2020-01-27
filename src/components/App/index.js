@@ -3,7 +3,6 @@ import axios from "axios";
 import { Search } from "../../components/Search";
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
-import { sortBy } from "lodash";
 
 import "./index.css";
 
@@ -14,30 +13,9 @@ import {
   PATH_SEARCH,
   PARAM_SEARCH,
   PARAM_PAGE,
-  PARAM_HPP
+  PARAM_HPP,
+  SORTS
 } from "../../constants";
-
-const SORTS = {
-  NONE: list => list,
-  TITLE: list => sortBy(list, "title"),
-  AUTHOR: list => sortBy(list, "author"),
-  COMMENTS: list => sortBy(list, "num_comments").reverse(),
-  POINTS: list => sortBy(list, "points").reverse()
-};
-
-const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
-  const sortClass = ["button-inline"];
-
-  if (sortKey === activeSortKey) {
-    sortClass.push("button-active");
-  }
-
-  return (
-    <Button onClick={() => onSort(sortKey)} className={sortClass.join(" ")}>
-      {children}
-    </Button>
-  );
-};
 
 const Loading = () => <div>Loading...</div>;
 
@@ -180,4 +158,4 @@ class App extends Component {
 }
 
 export default App;
-export { SORTS, Sort };
+export { SORTS };

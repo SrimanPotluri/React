@@ -2,7 +2,8 @@ import React from "react";
 import { Button } from "../../components/Button";
 import PropTypes from "prop-types";
 import "./index.css";
-import { SORTS, Sort } from "../../components/App";
+import { SORTS } from "../../components/App";
+import { Sort } from "../../components/Sort";
 
 const Table = ({ list, sortKey, onSort, onDismiss, isSortReverse }) => {
   const sortedList = SORTS[sortKey](list);
