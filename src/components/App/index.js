@@ -32,9 +32,7 @@ class App extends Component {
       searchKey: "",
       results: null,
       error: null,
-      isLoading: false,
-      sortKey: "NONE",
-      isSortReverse: false
+      isLoading: false
     };
   }
 
@@ -42,12 +40,6 @@ class App extends Component {
     const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
-  };
-
-  onSort = sortKey => {
-    const isSortReverse =
-      this.state.sortKey === sortKey && !this.state.isSortReverse;
-    this.setState({ sortKey, isSortReverse });
   };
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
@@ -104,15 +96,7 @@ class App extends Component {
   };
 
   render() {
-    const {
-      searchTerm,
-      results,
-      searchKey,
-      error,
-      isLoading,
-      sortKey,
-      isSortReverse
-    } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
     const list =
@@ -136,13 +120,7 @@ class App extends Component {
             <p>Something went wrong.</p>
           </div>
         ) : (
-          <Table
-            list={list}
-            sortKey={sortKey}
-            isSortReverse={isSortReverse}
-            onSort={this.onSort}
-            onDismiss={this.onDismiss}
-          />
+          <Table list={list} onDismiss={this.onDismiss} />
         )}
 
         <ButtonWithLoading
