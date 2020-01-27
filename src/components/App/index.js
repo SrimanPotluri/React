@@ -3,6 +3,7 @@ import axios from "axios";
 import { Search } from "../../components/Search";
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
+import { sortBy } from "lodash";
 
 import "./index.css";
 
@@ -15,6 +16,28 @@ import {
   PARAM_PAGE,
   PARAM_HPP
 } from "../../constants";
+
+const SORTS = {
+  NONE: list => list,
+  TITLE: list => sortBy(list, "title"),
+  AUTHOR: list => sortBy(list, "author"),
+  COMMENTS: list => sortBy(list, "num_comments").reverse(),
+  POINTS: list => sortBy(list, "points").reverse()
+};
+
+const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
+  const sortClass = ["button-inline"];
+
+  if (sortKey === activeSortKey) {
+    sortClass.push("button-active");
+  }
+
+  return (
+    <Button onClick={() => onSort(sortKey)} className={sortClass.join(" ")}>
+      {children}
+    </Button>
+  );
+};
 
 const Loading = () => <div>Loading...</div>;
 
@@ -32,7 +55,9 @@ class App extends Component {
       searchKey: "",
       results: null,
       error: null,
-      isLoading: false
+      isLoading: false,
+      sortKey: "NONE",
+      isSortReverse: false
     };
   }
 
@@ -40,6 +65,12 @@ class App extends Component {
     const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
+  };
+
+  onSort = sortKey => {
+    const isSortReverse =
+      this.state.sortKey === sortKey && !this.state.isSortReverse;
+    this.setState({ sortKey, isSortReverse });
   };
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
@@ -96,7 +127,15 @@ class App extends Component {
   };
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading } = this.state;
+    const {
+      searchTerm,
+      results,
+      searchKey,
+      error,
+      isLoading,
+      sortKey,
+      isSortReverse
+    } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
     const list =
@@ -120,7 +159,13 @@ class App extends Component {
             <p>Something went wrong.</p>
           </div>
         ) : (
-          <Table list={list} onDismiss={this.onDismiss} />
+          <Table
+            list={list}
+            sortKey={sortKey}
+            isSortReverse={isSortReverse}
+            onSort={this.onSort}
+            onDismiss={this.onDismiss}
+          />
         )}
 
         <ButtonWithLoading
@@ -135,3 +180,4 @@ class App extends Component {
 }
 
 export default App;
+export { SORTS, Sort };
