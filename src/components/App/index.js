@@ -123,16 +123,12 @@ class App extends Component {
           <Table list={list} onDismiss={this.onDismiss} />
         )}
 
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <ButtonWithLoading
-            isLoading={isLoading}
-            onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
-          >
-            More
-          </ButtonWithLoading>
-        )}
+        <ButtonWithLoading
+          isLoading={isLoading}
+          onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+        >
+          More
+        </ButtonWithLoading>
       </div>
     );
   }
